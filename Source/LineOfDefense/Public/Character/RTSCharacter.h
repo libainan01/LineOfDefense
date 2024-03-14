@@ -18,6 +18,8 @@ public:
 
 	virtual void HightLightActor() override;
 	virtual void UnHightLightActor() override;
+	UPROPERTY(BlueprintReadOnly)
+	bool bHightlighted = false;
 
 protected:
 	// Called when the game starts or when spawned

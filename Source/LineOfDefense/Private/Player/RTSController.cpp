@@ -39,6 +39,7 @@ void ARTSController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Started,this,&ARTSController::BeginDrawTraceBox);
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Triggered,this,&ARTSController::DrawTraceBox);
+	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Completed,this,&ARTSController::FinishDrawTraceBox);
 }
 
 void ARTSController::BeginDrawTraceBox(const FInputActionValue& InputActionValue)
@@ -63,6 +64,7 @@ void ARTSController::DrawTraceBox(const FInputActionValue& InputActionValue)
 
 void ARTSController::FinishDrawTraceBox(const FInputActionValue& InputActionValue)
 {
+    UE_LOG(LogTemp,Log,TEXT("------------%f"),TraceBoxHitResults.Num())
 	for (auto BoxHitResult : TraceBoxHitResults )
 	{
 		IRTSActorInterface* BoxHitActor = Cast<IRTSActorInterface>(BoxHitResult.GetActor());

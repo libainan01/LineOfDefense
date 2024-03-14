@@ -13,10 +13,12 @@ ARTSCharacter::ARTSCharacter()
 
 void ARTSCharacter::HightLightActor()
 {
+	bHightlighted = true;
 }
 
 void ARTSCharacter::UnHightLightActor()
 {
+	bHightlighted = false;
 }
 
 // Called when the game starts or when spawned
