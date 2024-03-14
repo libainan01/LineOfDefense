@@ -11,6 +11,7 @@
  */
 class UInputMappingContext;
 class UInputAction;
+class IRTSActorInterface;
 struct FInputActionValue;
 
 
@@ -32,4 +33,9 @@ private:
 	FVector StartTracepoint;
 	void BeginDrawTraceBox (const FInputActionValue& InputActionValue);
 	void DrawTraceBox(const FInputActionValue& InputActionValue);
+	void FinishDrawTraceBox(const FInputActionValue& InputActionValue);
+
+	TArray<IRTSActorInterface*> LastActors;
+	TArray<IRTSActorInterface*> ThisActors;
+	TArray<FHitResult> TraceBoxHitResults;
 };

@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Interaction/RTSActorInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -57,7 +58,25 @@ void ARTSController::DrawTraceBox(const FInputActionValue& InputActionValue)
 	FVector EndPoint = FVector(CursorHitResult.Location.X,StartTracepoint.Y+UKismetMathLibrary::SafeDivide(Diagonal.Y,2),0);
 	FVector HalfSize = FVector(0,UKismetMathLibrary::SafeDivide(Diagonal.Y,2),500);
 	TArray<AActor*> IgnoreActors;
-	TArray<FHitResult> BoxHitResults;
-	UKismetSystemLibrary::BoxTraceMulti(GetWorld(),StartPoint,EndPoint,HalfSize,FRotator(0,0,0),TraceTypeQuery3,false,IgnoreActors,EDrawDebugTrace::ForOneFrame,BoxHitResults,true);
-	UE_LOG(LogTemp,Log,TEXT("-----------------%f"),BoxHitResults.Num());
+	UKismetSystemLibrary::BoxTraceMulti(GetWorld(),StartPoint,EndPoint,HalfSize,FRotator(0,0,0),TraceTypeQuery3,false,IgnoreActors,EDrawDebugTrace::ForOneFrame,TraceBoxHitResults,true);
+}
+
+void ARTSController::FinishDrawTraceBox(const FInputActionValue& InputActionValue)
+{
+	for (auto BoxHitResult : TraceBoxHitResults )
+	{
+		IRTSActorInterface* BoxHitActor = Cast<IRTSActorInterface>(BoxHitResult.GetActor());
+		if(!BoxHitActor) continue;
+		BoxHitActor->HightLightActor();
+
+		ThisActors.Add(BoxHitActor);
+	}
+
+	for (auto LastHitActor :LastActors)
+	{
+		if (!LastHitActor) continue;
+
+		LastHitActor->UnHightLightActor();
+	}
+	
 }

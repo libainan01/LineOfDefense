@@ -4,16 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interaction/RTSActorInterface.h"
 #include "RTSCharacter.generated.h"
 
 UCLASS()
-class LINEOFDEFENSE_API ARTSCharacter : public ACharacter
+class LINEOFDEFENSE_API ARTSCharacter : public ACharacter ,public IRTSActorInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	ARTSCharacter();
+
+	virtual void HightLightActor() override;
+	virtual void UnHightLightActor() override;
 
 protected:
 	// Called when the game starts or when spawned
