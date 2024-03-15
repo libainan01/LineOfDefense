@@ -12,6 +12,7 @@ ARTSPlayerState::ARTSPlayerState()
 
 	RTSAbilitySystemComponent = CreateDefaultSubobject<URTSAbilitySystemComponent>(TEXT("AsbilitySystemComponent"));
 	RTSAbilitySystemComponent->SetIsReplicated(true);
+	RTSAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	RTSAttributes = CreateDefaultSubobject<URTSAttributeSet>(TEXT("RTSAttributeSet"));
 }

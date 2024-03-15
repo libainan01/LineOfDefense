@@ -12,16 +12,6 @@ ARTSCharacter::ARTSCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	RTSAbilitySystemComponent = CreateDefaultSubobject<URTSAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	RTSAbilitySystemComponent->SetIsReplicated(true);
-
-	RTSAttributes = CreateDefaultSubobject<URTSAttributeSet>(TEXT("Attributes"));
-
-}
-
-UAbilitySystemComponent* ARTSCharacter::GetAbilitySystemComponent() const
-{
-	return RTSAbilitySystemComponent;
 }
 
 void ARTSCharacter::HightLightActor()
@@ -38,7 +28,7 @@ void ARTSCharacter::UnHightLightActor()
 void ARTSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
 // Called every frame

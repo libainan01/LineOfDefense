@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RTSCharacterBase.h"
 #include "GameFramework/Character.h"
 #include "RTSObersver.generated.h"
 
 UCLASS()
-class LINEOFDEFENSE_API ARTSObersver : public ACharacter
+class LINEOFDEFENSE_API ARTSObersver : public ARTSCharacterBase
 {
 	GENERATED_BODY()
 
