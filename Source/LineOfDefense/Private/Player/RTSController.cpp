@@ -64,7 +64,6 @@ void ARTSController::DrawTraceBox(const FInputActionValue& InputActionValue)
 
 void ARTSController::FinishDrawTraceBox(const FInputActionValue& InputActionValue)
 {
-    UE_LOG(LogTemp,Log,TEXT("------------%f"),TraceBoxHitResults.Num())
 	for (auto BoxHitResult : TraceBoxHitResults )
 	{
 		IRTSActorInterface* BoxHitActor = Cast<IRTSActorInterface>(BoxHitResult.GetActor());
