@@ -3,8 +3,10 @@
 
 #include "Character/RTSObersver.h"
 
+#include "AbilitySystemComponent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Player/RTSPlayerState.h"
 
 // Sets default values
 ARTSObersver::ARTSObersver()
@@ -14,20 +16,42 @@ ARTSObersver::ARTSObersver()
 
 }
 
+void ARTSObersver::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitAbilityActorInfo();
+}
+
+void ARTSObersver::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitAbilityActorInfo();
+}
+
 // Called when the game starts or when spawned
 void ARTSObersver::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
 }
 
-FVector ARTSObersver::CalculaterMoveDirection()
+void ARTSObersver::InitAbilityActorInfo()
+{
+	ARTSPlayerState* RTSPlayerState = GetPlayerState<ARTSPlayerState>();
+	check(RTSPlayerState);
+	RTSPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(RTSPlayerState,this);
+	RTSAbilitySystemComponent = RTSPlayerState->GetAbilitySystemComponent();
+	RTSAttributes = RTSPlayerState->GetAttributeSet();
+}
+
+FVector ARTSObersver::CalculateMoveDirection() const
 {
     FVector MoveDirection;
 	
-	FVector2D ViewportCenterPoint = UWidgetLayoutLibrary::GetViewportWidgetGeometry(GetWorld()).GetLocalSize()/2;
-	FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+	const FVector2D ViewportCenterPoint = UWidgetLayoutLibrary::GetViewportWidgetGeometry(GetWorld()).GetLocalSize()/2;
+	const FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
 
-	float BorderLength = 20;
+	constexpr float BorderLength = 20;
 
 	/*
 	 * 接下来需要判断鼠标是否到达屏幕边缘
@@ -38,8 +62,8 @@ FVector ARTSObersver::CalculaterMoveDirection()
 	 *    Y轴同理
 	 *    在这里进行了一次坐标转换，以保证移动方向和三维默认场景方向一致
 	 */
-	float XDirection = MousePosition.X - ViewportCenterPoint.X;
-	float YDirection = MousePosition.Y - ViewportCenterPoint.Y;
+	const float XDirection = MousePosition.X - ViewportCenterPoint.X;
+	const float YDirection = MousePosition.Y - ViewportCenterPoint.Y;
 	if (abs(XDirection)>ViewportCenterPoint.X - BorderLength)
 	{
 		if (XDirection>0)
@@ -72,7 +96,7 @@ void ARTSObersver::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GetMovementComponent()->Velocity = 5000.f*CalculaterMoveDirection();
+	GetMovementComponent()->Velocity = 5000.f*CalculateMoveDirection();
 
 }
 

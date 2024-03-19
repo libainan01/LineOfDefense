@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "Interaction/RTSActorInterface.h"
 #include "RTSCharacterBase.h"
 #include "RTSCharacter.generated.h"
@@ -16,7 +15,7 @@ class LINEOFDEFENSE_API ARTSCharacter : public ARTSCharacterBase ,public IRTSAct
 public:
 	// Sets default values for this character's properties
 	ARTSCharacter();
-	
+
 	/** IRTSActorInterface */
 	virtual void HightLightActor() override;
 	virtual void UnHightLightActor() override;
@@ -28,12 +27,4 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };

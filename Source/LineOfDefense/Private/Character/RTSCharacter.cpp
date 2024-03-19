@@ -31,17 +31,3 @@ void ARTSCharacter::BeginPlay()
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
-// Called every frame
-void ARTSCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ARTSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

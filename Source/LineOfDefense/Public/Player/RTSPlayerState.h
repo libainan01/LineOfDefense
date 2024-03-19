@@ -11,8 +11,8 @@
  * 
  */
 
-class URTSAbilitySystemComponent;
-class URTSAttributeSet;
+class UAbilitySystemComponent;
+class UAttributeSet;
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSPlayerState : public APlayerState , public IAbilitySystemInterface
@@ -22,11 +22,11 @@ public:
 	ARTSPlayerState();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	URTSAttributeSet* GetAttributeSet() const {return RTSAttributes;}
+	UAttributeSet* GetAttributeSet() const {return RTSAttributes;}
 
 protected:
 	UPROPERTY()
-	TObjectPtr<URTSAbilitySystemComponent> RTSAbilitySystemComponent;
+	TObjectPtr<UAbilitySystemComponent> RTSAbilitySystemComponent;
 	UPROPERTY()
-	TObjectPtr<URTSAttributeSet> RTSAttributes;
+	TObjectPtr<UAttributeSet> RTSAttributes;
 };

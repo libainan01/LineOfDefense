@@ -2,7 +2,7 @@
 
 
 #include "Player/RTSPlayerState.h"
-
+#include "AbilitySystemComponent.h"
 #include "AbilitySystem/RTSAbilitySystemComponent.h"
 #include "AbilitySystem/RTSAttributeSet.h"
 

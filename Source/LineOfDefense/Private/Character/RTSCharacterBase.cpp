@@ -4,6 +4,7 @@
 #include "Character/RTSCharacterBase.h"
 #include "AbilitySystem/RTSAbilitySystemComponent.h"
 #include "AbilitySystem/RTSAttributeSet.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 ARTSCharacterBase::ARTSCharacterBase()

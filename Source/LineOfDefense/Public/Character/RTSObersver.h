@@ -15,11 +15,16 @@ class LINEOFDEFENSE_API ARTSObersver : public ARTSCharacterBase
 public:
 	// Sets default values for this character's properties
 	ARTSObersver();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	FVector CalculaterMoveDirection();
+
+	void InitAbilityActorInfo();
+	
+	FVector CalculateMoveDirection() const;
 
 public:	
 	// Called every frame
