@@ -6,7 +6,9 @@
 #include "AbilitySystemComponent.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Player/RTSController.h"
 #include "Player/RTSPlayerState.h"
+#include "UI/HUD/RTSHUD.h"
 
 // Sets default values
 ARTSObersver::ARTSObersver()
@@ -42,6 +44,14 @@ void ARTSObersver::InitAbilityActorInfo()
 	RTSPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(RTSPlayerState,this);
 	RTSAbilitySystemComponent = RTSPlayerState->GetAbilitySystemComponent();
 	RTSAttributes = RTSPlayerState->GetAttributeSet();
+
+	if(ARTSController* RTSController = Cast<ARTSController>(GetController()))
+	{
+		if (ARTSHUD* RTSHUD = Cast<ARTSHUD>(RTSController->GetHUD()))
+		{
+			RTSHUD->InitOverlay(RTSController,RTSPlayerState,RTSAbilitySystemComponent,RTSAttributes);
+		}
+	}
 }
 
 FVector ARTSObersver::CalculateMoveDirection() const

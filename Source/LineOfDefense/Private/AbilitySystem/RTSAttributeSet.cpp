@@ -12,9 +12,12 @@ URTSAttributeSet::URTSAttributeSet()
 void URTSAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
+	//设置网络同步条件
 	DOREPLIFETIME_CONDITION_NOTIFY(URTSAttributeSet,Health,COND_None,REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(URTSAttributeSet,MaxHealth,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URTSAttributeSet,Wood,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URTSAttributeSet,Gold,COND_None,REPNOTIFY_Always);
 }
 
 void URTSAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -25,4 +28,14 @@ void URTSAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) con
 void URTSAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(URTSAttributeSet,MaxHealth,OldMaxHealth);
+}
+
+void URTSAttributeSet::OnRep_Wood(const FGameplayAttributeData& OldWood) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(URTSAttributeSet,Wood,OldWood);
+}
+
+void URTSAttributeSet::OnRep_Gold(const FGameplayAttributeData& OldGold) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(URTSAttributeSet,Gold,OldGold);
 }

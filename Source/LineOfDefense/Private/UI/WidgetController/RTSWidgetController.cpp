@@ -8,5 +8,14 @@ void URTSWidgetController::SetWidgetControllerParams(const FWidgetControllerPara
 	PlayerController = WCParams.PlayerController;
 	PlayerState = WCParams.PlayerState;
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
-	Attributes = WCParams.Attributes;
+	AttributeSet = WCParams.Attributes;
+}
+
+void URTSWidgetController::BroadcastInitialValues()
+{
+	
+}
+
+void URTSWidgetController::BindCallbacksToDependencies()
+{
 }

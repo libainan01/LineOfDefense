@@ -3,7 +3,6 @@
 
 #include "Character/RTSCharacter.h"
 
-#include "AbilitySystem/RTSAbilitySystemComponent.h"
 #include "AbilitySystem/RTSAttributeSet.h"
 
 // Sets default values

@@ -22,18 +22,31 @@ class LINEOFDEFENSE_API URTSAttributeSet : public UAttributeSet
 public:
 	URTSAttributeSet();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	UPROPERTY(BlueprintReadOnly,Replicatedusing = OnRep_Health , Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly,Replicatedusing=OnRep_Health,Category="Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(URTSAttributeSet,Health);
 	
-	UPROPERTY(BlueprintReadOnly,Replicatedusing = OnRep_MaxHealth , Category = "Vital Attributes")
+	UPROPERTY(BlueprintReadOnly,Replicatedusing=OnRep_MaxHealth,Category="Vital Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(URTSAttributeSet,MaxHealth);
+	
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Wood,Category="Vital Attributes|Materials")
+	FGameplayAttributeData Wood;
+	ATTRIBUTE_ACCESSORS(URTSAttributeSet,Wood);
 
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Gold,Category="Vital Attributes|Materials")
+	FGameplayAttributeData Gold;
+	ATTRIBUTE_ACCESSORS(URTSAttributeSet,Gold);
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const;
-	
+
+	UFUNCTION()
+	void OnRep_Wood(const FGameplayAttributeData& OldWood) const;
+
+	UFUNCTION()
+	void OnRep_Gold(const FGameplayAttributeData& OldGold) const;
 };
