@@ -2,47 +2,39 @@
 
 
 #include "Actor/RTSEffectActor.h"
-
+#include "Player/RTSPlayerState.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystem/RTSAttributeSet.h"
-#include "Components/SphereComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ARTSEffectActor::ARTSEffectActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-
-	Mesh = CreateDefaultSubobject<UMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
-	
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(Mesh);
-
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
-
-void ARTSEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if(IAbilitySystemInterface* ACSInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		const URTSAttributeSet* URTSAttributes = Cast<URTSAttributeSet>(ACSInterface->GetAbilitySystemComponent()->GetAttributeSet(URTSAttributeSet::StaticClass()));
-	}
-}
-
-void ARTSEffectActor::Endoverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	
-}
-
 // Called when the game starts or when spawned
 void ARTSEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
-	Sphere->OnComponentBeginOverlap.AddDynamic(this,&ARTSEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this,&ARTSEffectActor::Endoverlap);
+	ARTSPlayerState* PS = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
+	PS->SaveActor(this,ActorType);
+}
+
+void ARTSEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if(TargetASC == nullptr) return;
+	
+    check(GameplayEffectClass);
+	//获得GameplayEffectContextHandle
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+	//设置数据源
+	EffectContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass,1.f,EffectContextHandle);
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
 

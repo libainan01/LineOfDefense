@@ -15,12 +15,16 @@
 /**
  * 
  */
+
+
+
 UCLASS()
 class LINEOFDEFENSE_API URTSAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 public:
 	URTSAttributeSet();
+	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	UPROPERTY(BlueprintReadOnly,Replicatedusing=OnRep_Health,Category="Vital Attributes")
 	FGameplayAttributeData Health;
@@ -49,4 +53,7 @@ public:
 
 	UFUNCTION()
 	void OnRep_Gold(const FGameplayAttributeData& OldGold) const;
+
+protected:
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 };

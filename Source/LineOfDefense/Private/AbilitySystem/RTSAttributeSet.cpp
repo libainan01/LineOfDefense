@@ -7,6 +7,9 @@
 URTSAttributeSet::URTSAttributeSet()
 {
 	InitHealth(100.f);
+	InitMaxHealth(100.f);
+	InitWood(100);
+	InitGold(50);
 }
 
 void URTSAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -38,4 +41,10 @@ void URTSAttributeSet::OnRep_Wood(const FGameplayAttributeData& OldWood) const
 void URTSAttributeSet::OnRep_Gold(const FGameplayAttributeData& OldGold) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(URTSAttributeSet,Gold,OldGold);
+}
+
+void URTSAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	UE_LOG(LogTemp,Log,TEXT(".....%f"),NewValue)
 }

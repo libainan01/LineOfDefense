@@ -30,3 +30,20 @@ void ARTSCharacter::BeginPlay()
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
 }
 
+void ARTSCharacter::BindCallbacksToDependencies()
+{
+	URTSAttributeSet* RTSAS = Cast<URTSAttributeSet>(RTSAttributes);
+	RTSAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(RTSAS->GetGoldAttribute()).AddUObject(this,&ARTSCharacter::GoldChange);
+	RTSAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(RTSAS->GetWoodAttribute()).AddUObject(this,&ARTSCharacter::WoodChange);
+}
+
+void ARTSCharacter::WoodChange(const FOnAttributeChangeData& Data) const
+{
+	OnWoodChange.Broadcast(Data.NewValue);
+}
+
+void ARTSCharacter::GoldChange(const FOnAttributeChangeData& Data) const
+{
+	OnGoldChange.Broadcast(Data.NewValue);
+}
+

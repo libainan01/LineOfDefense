@@ -11,6 +11,8 @@ void UOverlayWidgetController::BroadcastInitialValues()
 
 	OnHealthChanged.Broadcast(RTSAttributes->GetHealth());
 	OnMaxHealthChanged.Broadcast(RTSAttributes->GetMaxHealth());
+	OnWoodChanged.Broadcast(RTSAttributes->GetWood());
+	OnGoldChanged.Broadcast(RTSAttributes->GetGold());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
