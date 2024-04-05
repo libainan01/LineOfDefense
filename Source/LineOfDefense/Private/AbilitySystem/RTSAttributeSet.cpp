@@ -46,5 +46,4 @@ void URTSAttributeSet::OnRep_Gold(const FGameplayAttributeData& OldGold) const
 void URTSAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
-	UE_LOG(LogTemp,Log,TEXT(".....%f"),NewValue)
 }

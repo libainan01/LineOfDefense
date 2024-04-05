@@ -8,8 +8,36 @@
 #include "AbilitySystem/RTSAttributeSet.h"
 #include "RTSCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWoodChanged,float,NewWood);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGoldChanged,float,NewGold);
+USTRUCT(BlueprintType)
+struct FMaterials
+{
+	GENERATED_BODY()
+public:
+	FMaterials()
+	{
+		Gold = 0;
+		Wood = 0;
+	}
+	FMaterials(int32 NewGold , int32 NewWood)
+	{
+		Gold = NewGold;
+		Wood = NewWood;
+	}
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 Gold;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 Wood;
+
+	FMaterials operator += (const FMaterials NewMaterials)
+	{
+		Gold += NewMaterials.Gold;
+		Wood += NewMaterials.Wood;
+
+		return *this;
+	}
+};
+
+enum class ERTSActorType:uint8;
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSCharacter : public ARTSCharacterBase ,public IRTSActorInterface 
@@ -28,21 +56,24 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bHightlighted = false;
 
-	UPROPERTY(BlueprintAssignable , Category="GAS|Attributs")
-	FOnWoodChanged OnWoodChange;
+	UPROPERTY(BlueprintReadWrite,Category="RTS|Materials")
+	int32 BackpackNum;
 
-	UPROPERTY(BlueprintAssignable , Category="GAS|Attributs")
-	FOnGoldChanged OnGoldChange;
-
-	UPROPERTY(BlueprintReadOnly,Category="GAS|Attributs")
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="RTS|Materials")
 	int32 BackpackCapacity;
+    UFUNCTION(BlueprintCallable)
+	void SaveMaterial (FMaterials Materials);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	void BindCallbacksToDependencies();
-	
-	void WoodChange (const FOnAttributeChangeData& Data) const;
-	void GoldChange (const FOnAttributeChangeData& Data) const;
+    UFUNCTION(BlueprintImplementableEvent)
+	void MaterialsIsGat();
+	UPROPERTY(EditAnywhere,Category="RTS|Attributes")
+	ERTSActorType Actortype;
+	UFUNCTION(BlueprintCallable)
+	void EmptuTheMaterial();
+	UFUNCTION(BlueprintCallable)
+	FMaterials GetBackpackSaveMaterials(){return BackpackSaveMaterials;}
+	FMaterials BackpackSaveMaterials;
 };

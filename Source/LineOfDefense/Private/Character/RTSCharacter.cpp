@@ -4,13 +4,14 @@
 #include "Character/RTSCharacter.h"
 
 #include "AbilitySystem/RTSAttributeSet.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/RTSPlayerState.h"
 
 // Sets default values
 ARTSCharacter::ARTSCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 void ARTSCharacter::HightLightActor()
@@ -23,27 +24,27 @@ void ARTSCharacter::UnHightLightActor()
 	bHightlighted = false;
 }
 
+void ARTSCharacter::SaveMaterial(FMaterials Materials)
+{
+	BackpackNum += Materials.Gold;
+	BackpackNum += Materials.Wood;
+
+	BackpackSaveMaterials += Materials;
+}
+
 // Called when the game starts or when spawned
 void ARTSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
+    Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->SaveActor(this,Actortype);
 }
 
-void ARTSCharacter::BindCallbacksToDependencies()
+void ARTSCharacter::EmptuTheMaterial()
 {
-	URTSAttributeSet* RTSAS = Cast<URTSAttributeSet>(RTSAttributes);
-	RTSAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(RTSAS->GetGoldAttribute()).AddUObject(this,&ARTSCharacter::GoldChange);
-	RTSAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(RTSAS->GetWoodAttribute()).AddUObject(this,&ARTSCharacter::WoodChange);
+	BackpackSaveMaterials.Gold = 0;
+	BackpackSaveMaterials.Wood = 0;
+	BackpackNum = 0;
 }
 
-void ARTSCharacter::WoodChange(const FOnAttributeChangeData& Data) const
-{
-	OnWoodChange.Broadcast(Data.NewValue);
-}
-
-void ARTSCharacter::GoldChange(const FOnAttributeChangeData& Data) const
-{
-	OnGoldChange.Broadcast(Data.NewValue);
-}
 
