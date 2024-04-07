@@ -42,6 +42,7 @@ void ARTSController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Started,this,&ARTSController::BeginDrawTraceBox);
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Triggered,this,&ARTSController::DrawTraceBox);
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Completed,this,&ARTSController::FinishDrawTraceBox);
+	EnhancedInputComponent->BindAction(MouseRightButtonAction,ETriggerEvent::Completed,this,&ARTSController::RightButtonClick);
 }
 
 void ARTSController::BeginDrawTraceBox(const FInputActionValue& InputActionValue)
@@ -68,11 +69,11 @@ void ARTSController::FinishDrawTraceBox(const FInputActionValue& InputActionValu
 {
 	for (auto BoxHitResult : TraceBoxHitResults )
 	{
-		IRTSActorInterface* BoxHitActor = Cast<IRTSActorInterface>(BoxHitResult.GetActor());
+		TScriptInterface<IRTSActorInterface> BoxHitActor = BoxHitResult.GetActor();
 		if(!BoxHitActor) continue;
 		BoxHitActor->HightLightActor();
 
-		ThisActors.Add(BoxHitActor);
+		ThisActors.Add(BoxHitResult.GetActor());
 	}
 
 	for (auto LastHitActor :LastActors)
@@ -83,3 +84,20 @@ void ARTSController::FinishDrawTraceBox(const FInputActionValue& InputActionValu
 	}
 	
 }
+
+void ARTSController::RightButtonClick(const FInputActionValue& InputActionValue)
+{
+	if (ThisActors.IsEmpty())
+	{
+		return;
+	}
+	FHitResult CurseHitResult;
+	FRightButtonClickResult RightButtonClickResult;
+	GetHitResultUnderCursor(ECC_Visibility,false,CurseHitResult);
+	if (CurseHitResult.GetActor() != nullptr)
+	{
+		RightButtonClickResult.HitActor = CurseHitResult.GetActor();
+		SendSkillUserAndTarget(ThisActors,RightButtonClickResult);
+	}
+}
+

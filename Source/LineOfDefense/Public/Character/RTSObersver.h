@@ -26,6 +26,8 @@ protected:
 	
 	FVector CalculateMoveDirection() const;
 
+	void BindWareaHouseUpdateMessage();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

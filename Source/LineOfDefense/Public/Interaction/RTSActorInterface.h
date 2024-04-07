@@ -6,6 +6,23 @@
 #include "UObject/Interface.h"
 #include "RTSActorInterface.generated.h"
 
+UENUM(BlueprintType)
+enum class ERTSActorType:uint8
+{
+	Worker,
+	WareHouse,
+	Barracks,
+	Material
+};
+
+UENUM(BlueprintType)
+enum class ERTSActorStates:uint8
+{
+	Idle,
+	Moving,
+	Gathering
+};
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class URTSActorInterface : public UInterface
@@ -16,6 +33,7 @@ class URTSActorInterface : public UInterface
 /**
  * 
  */
+//
 class LINEOFDEFENSE_API IRTSActorInterface
 {
 	GENERATED_BODY()
@@ -24,4 +42,6 @@ class LINEOFDEFENSE_API IRTSActorInterface
 public:
 	virtual void HightLightActor() = 0 ;
 	virtual void UnHightLightActor() = 0;
+	virtual void SetActorState(ERTSActorStates NewActorStates);
+	virtual ERTSActorStates GetActorStates();
 };

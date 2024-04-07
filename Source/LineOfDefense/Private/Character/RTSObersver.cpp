@@ -101,6 +101,11 @@ FVector ARTSObersver::CalculateMoveDirection() const
 	return MoveDirection;
 }
 
+void ARTSObersver::BindWareaHouseUpdateMessage()
+{
+	
+}
+
 // Called every frame
 void ARTSObersver::Tick(float DeltaTime)
 {

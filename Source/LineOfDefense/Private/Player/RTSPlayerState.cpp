@@ -22,7 +22,7 @@ UAbilitySystemComponent* ARTSPlayerState::GetAbilitySystemComponent() const
 	return RTSAbilitySystemComponent;
 }
 
-void ARTSPlayerState::SaveActor(AActor* TargetActor, ERTSActorType ActorType)
+void ARTSPlayerState::SaveActor(TScriptInterface<IRTSActorInterface>TargetActor, ERTSActorType ActorType)
 {
 	switch (ActorType)
 	{
@@ -42,7 +42,7 @@ void ARTSPlayerState::SaveActor(AActor* TargetActor, ERTSActorType ActorType)
 	}
 }
 
-TArray<AActor*> ARTSPlayerState::GetActor(ERTSActorType ActorType)
+TArray<TScriptInterface<IRTSActorInterface>> ARTSPlayerState::GetActor(ERTSActorType ActorType)
 {
 	switch (ActorType)
 	{
@@ -55,7 +55,8 @@ TArray<AActor*> ARTSPlayerState::GetActor(ERTSActorType ActorType)
 	case ERTSActorType::Material:
 		return MaterialArray;
 	default:
-		TArray<AActor*> Actors;
+		TArray<TScriptInterface<IRTSActorInterface>> Actors;
 		return Actors;
 	}
 }
+

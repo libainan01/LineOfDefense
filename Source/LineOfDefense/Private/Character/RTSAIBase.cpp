@@ -1,50 +1,40 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/RTSCharacter.h"
+#include "Character/RTSAIBase.h"
 
 #include "AbilitySystem/RTSAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RTSPlayerState.h"
 
 // Sets default values
-ARTSCharacter::ARTSCharacter()
+ARTSAIBase::ARTSAIBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ARTSCharacter::HightLightActor()
+void ARTSAIBase::HightLightActor()
 {
 	bHightlighted = true;
 }
 
-void ARTSCharacter::UnHightLightActor()
+void ARTSAIBase::UnHightLightActor()
 {
 	bHightlighted = false;
 }
 
-void ARTSCharacter::SaveMaterial(FMaterials Materials)
+void ARTSAIBase::SetActorState(ERTSActorStates NewActorStates)
 {
-	BackpackNum += Materials.Gold;
-	BackpackNum += Materials.Wood;
-
-	BackpackSaveMaterials += Materials;
+	ActorStates = NewActorStates;
 }
-
 // Called when the game starts or when spawned
-void ARTSCharacter::BeginPlay()
+void ARTSAIBase::BeginPlay()
 {
 	Super::BeginPlay();
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
     Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->SaveActor(this,Actortype);
 }
 
-void ARTSCharacter::EmptuTheMaterial()
-{
-	BackpackSaveMaterials.Gold = 0;
-	BackpackSaveMaterials.Wood = 0;
-	BackpackNum = 0;
-}
 
 

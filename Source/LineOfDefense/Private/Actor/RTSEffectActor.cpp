@@ -15,6 +15,15 @@ ARTSEffectActor::ARTSEffectActor()
 	PrimaryActorTick.bCanEverTick = false;
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
+
+void ARTSEffectActor::HightLightActor()
+{
+}
+
+void ARTSEffectActor::UnHightLightActor()
+{
+}
+
 // Called when the game starts or when spawned
 void ARTSEffectActor::BeginPlay()
 {
