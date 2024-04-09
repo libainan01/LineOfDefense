@@ -5,27 +5,21 @@
 #include "CoreMinimal.h"
 #include "ActorComponent/BackpackInterface.h"
 #include "Character/RTSAIBase.h"
-#include "Worker.generated.h"
+#include "WareHouse.generated.h"
 
 /**
  * 
- */
+*/
 
 UCLASS()
-class LINEOFDEFENSE_API AWorker : public ARTSAIBase ,public IBackpackInterface
+class LINEOFDEFENSE_API AWareHouse : public ARTSAIBase ,public IBackpackInterface
 {
 	GENERATED_BODY()
 public:
-	AWorker();
-	UFUNCTION(BlueprintCallable)
-	FRTSMaterials GatherRTSMaterials(TScriptInterface<IRTSMaterialActorInterface> RTSMaterialActor);
+	AWareHouse();
 	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
     virtual URTSMaterialsBackpack* GetRTSMaterialsBackpack() const override{return RTSMaterialsBackpack;}
 protected:
-	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="RTS|Attributes")
-	int32 GatheringEfficiency = 1;
-    UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<URTSMaterialsBackpack> RTSMaterialsBackpack;
-	
-	
 };

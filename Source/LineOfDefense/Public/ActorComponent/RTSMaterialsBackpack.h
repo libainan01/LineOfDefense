@@ -7,6 +7,10 @@
 #include "Interaction/RTSMaterialActorInterface.h"
 #include "RTSMaterialsBackpack.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBackpackFallingSignature,bool,BackpackIsFalling);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRTSMaterialsChangeSignature,FRTSMaterials,NewRTSMaterials);
+
+class ARTSPlayerState;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LINEOFDEFENSE_API URTSMaterialsBackpack : public UActorComponent
 {
@@ -15,13 +19,26 @@ class LINEOFDEFENSE_API URTSMaterialsBackpack : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	URTSMaterialsBackpack();
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
 	FRTSMaterials StoreRTSMaterials(FRTSMaterials NewMaterials);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
 	FRTSMaterials ConsumableRTSMaterials(FRTSMaterials NewMaterials);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
 	FRTSMaterials GetRTSMaterials(){return StoringRTSMaterials;}
-
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
+	int32 GetBackpackCapacity() const {return BackpackCapacity;}
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
+	int32 SetBackpackCapacity(int32 NewBackpackCapacity);
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
+	FRTSMaterials GetStoringRTSMaterials() const {return StoringRTSMaterials;}
+	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
+	void SubRTSMaterialsToTarget(URTSMaterialsBackpack* NewRTSBackpack);
+	
+    UPROPERTY(BlueprintAssignable,Category="RTS|Backpack")
+	FBackpackFallingSignature BackpackFalling;
+	UPROPERTY(BlueprintAssignable,Category="RTS|Backpack")
+	FRTSMaterialsChangeSignature OnRTSMaterialsChanging;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

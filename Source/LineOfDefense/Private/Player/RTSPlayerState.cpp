@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/RTSAbilitySystemComponent.h"
 #include "AbilitySystem/RTSAttributeSet.h"
+#include "ActorComponent/RTSMaterialsBackpack.h"
 
 ARTSPlayerState::ARTSPlayerState()
 {
@@ -15,6 +16,8 @@ ARTSPlayerState::ARTSPlayerState()
 	RTSAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	RTSAttributes = CreateDefaultSubobject<URTSAttributeSet>(TEXT("RTSAttributeSet"));
+
+	Backpack = CreateDefaultSubobject<URTSMaterialsBackpack>(TEXT("Backpack"));
 }
 
 UAbilitySystemComponent* ARTSPlayerState::GetAbilitySystemComponent() const
@@ -22,7 +25,7 @@ UAbilitySystemComponent* ARTSPlayerState::GetAbilitySystemComponent() const
 	return RTSAbilitySystemComponent;
 }
 
-void ARTSPlayerState::SaveActor(TScriptInterface<IRTSActorInterface>TargetActor, ERTSActorType ActorType)
+void ARTSPlayerState::SaveActor(FRTSActorInfo TargetActor, ERTSActorType ActorType)
 {
 	switch (ActorType)
 	{
@@ -42,7 +45,7 @@ void ARTSPlayerState::SaveActor(TScriptInterface<IRTSActorInterface>TargetActor,
 	}
 }
 
-TArray<TScriptInterface<IRTSActorInterface>> ARTSPlayerState::GetActor(ERTSActorType ActorType)
+TArray<FRTSActorInfo> ARTSPlayerState::GetActor(ERTSActorType ActorType)
 {
 	switch (ActorType)
 	{
@@ -55,8 +58,15 @@ TArray<TScriptInterface<IRTSActorInterface>> ARTSPlayerState::GetActor(ERTSActor
 	case ERTSActorType::Material:
 		return MaterialArray;
 	default:
-		TArray<TScriptInterface<IRTSActorInterface>> Actors;
+		TArray<FRTSActorInfo> Actors;
 		return Actors;
 	}
+}
+
+void ARTSPlayerState::UpdateRTSMaterialInAttributes()const
+{
+	TObjectPtr<URTSAttributeSet> AS = Cast<URTSAttributeSet>(RTSAttributes);
+	AS->SetGold(Backpack->GetStoringRTSMaterials().GetGold());
+	AS->SetWood(Backpack->GetStoringRTSMaterials().GetWood());
 }
 

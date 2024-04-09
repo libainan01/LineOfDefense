@@ -6,12 +6,14 @@
 #include "AbilitySystem/RTSAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RTSPlayerState.h"
+#include "Player/AI/RTSAIController.h"
 
 // Sets default values
 ARTSAIBase::ARTSAIBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	AIControllerClass = ARTSAIController::StaticClass();
 }
 
 void ARTSAIBase::HightLightActor()
@@ -33,7 +35,8 @@ void ARTSAIBase::BeginPlay()
 {
 	Super::BeginPlay();
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
-    Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->SaveActor(this,Actortype);
+	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+    Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->SaveActor(RTSActorInfo,Actortype);
 }
 
 

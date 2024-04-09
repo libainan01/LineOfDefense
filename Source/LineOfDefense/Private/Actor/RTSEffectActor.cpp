@@ -29,7 +29,8 @@ void ARTSEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 	ARTSPlayerState* PS = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
-	PS->SaveActor(this,ActorType);
+	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+	PS->SaveActor(RTSActorInfo,ActorType);
 }
 
 void ARTSEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)

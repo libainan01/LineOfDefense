@@ -8,8 +8,8 @@ URTSAttributeSet::URTSAttributeSet()
 {
 	InitHealth(100.f);
 	InitMaxHealth(100.f);
-	InitWood(100);
-	InitGold(50);
+	InitWood(0);
+	InitGold(0);
 }
 
 void URTSAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

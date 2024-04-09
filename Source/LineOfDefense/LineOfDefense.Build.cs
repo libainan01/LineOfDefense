@@ -8,7 +8,7 @@ public class LineOfDefense : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","EnhancedInput","UMG","GameplayAbilities" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","EnhancedInput","UMG","GameplayAbilities", "AIModule" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {"GameplayTags","GameplayTasks" });
 

@@ -17,11 +17,17 @@ struct FRTSMaterials
 		Wood = 0;
 		Total = Wood + Gold;
 	}
+
+	FRTSMaterials(int32 Value):Gold(Value),Wood(Value)
+	{
+		Total = Gold + Wood;
+	}
+	
 	FRTSMaterials(int32 NewGold , int32 NewWood)
 	{
 		Gold = NewGold;
 		Wood = NewWood;
-		Total = NewGold + NewWood;
+		Total = Gold+Wood;
 	}
 
 	FRTSMaterials AddMaterials(const FRTSMaterials NewMaterials)
@@ -39,6 +45,17 @@ struct FRTSMaterials
 	int32 GetWood() const {return Wood;}
 	
 	int32 GetTotal() const {return Total;}
+
+	FRTSMaterials operator - (const FRTSMaterials NewMaterials)
+	{
+		FRTSMaterials Materials(Gold-NewMaterials.Gold,Wood-NewMaterials.Wood);
+		return Materials;
+	}
+	FRTSMaterials operator + (const FRTSMaterials NewMaterials)
+	{
+		FRTSMaterials Materials(Gold+NewMaterials.Gold,Wood+NewMaterials.Wood);
+		return Materials;
+	}
 protected:
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -53,16 +70,23 @@ private:
 	{
 		Gold += NewMaterials.Gold;
 		Wood += NewMaterials.Wood;
-		Total += Total;
+		Total = Gold + Wood;
 
 		return *this;
 	}
 	FRTSMaterials operator -= (const FRTSMaterials NewMaterials)
 	{
 		Gold -= NewMaterials.Gold;
+		if (Gold<=0)
+		{
+			Gold = 0;
+		}
 		Wood -= NewMaterials.Wood;
-		Total -= NewMaterials.Total;
-
+		if (Wood<=0)
+		{
+			Wood = 0;
+		}
+		Total = Gold + Wood;
 		return *this;
 	}
 };
@@ -82,4 +106,5 @@ class LINEOFDEFENSE_API IRTSMaterialActorInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual FRTSMaterials BeGathering (int32 GatherEfficiency) = 0;
 };

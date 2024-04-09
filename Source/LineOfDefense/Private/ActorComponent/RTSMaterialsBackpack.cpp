@@ -15,18 +15,38 @@ URTSMaterialsBackpack::URTSMaterialsBackpack()
 
 FRTSMaterials URTSMaterialsBackpack::StoreRTSMaterials(FRTSMaterials NewMaterials)
 {
-	StoringRTSMaterials.AddMaterials(StoringRTSMaterials);
-	UE_LOG(LogTemp,Log,TEXT("StoreMaterials %d"),StoringRTSMaterials.GetTotal())
+	StoringRTSMaterials.AddMaterials(NewMaterials);
+	if (BackpackFalling.IsBound())
+	{
+		BackpackFalling.Broadcast(StoringRTSMaterials.GetTotal()>=BackpackCapacity);
+	}
+	OnRTSMaterialsChanging.Broadcast(StoringRTSMaterials);
 	return StoringRTSMaterials;
 }
 
 FRTSMaterials URTSMaterialsBackpack::ConsumableRTSMaterials(FRTSMaterials NewMaterials)
 {
 	StoringRTSMaterials.ConsumableMaterials(NewMaterials);
-	UE_LOG(LogTemp,Log,TEXT("StoreMaterials %d"),StoringRTSMaterials.GetTotal())
+	if (BackpackFalling.IsBound())
+	{
+		BackpackFalling.Broadcast(StoringRTSMaterials.GetTotal()>=BackpackCapacity);
+	}
+	OnRTSMaterialsChanging.Broadcast(StoringRTSMaterials);
 	return StoringRTSMaterials;
 }
 
+
+int32 URTSMaterialsBackpack::SetBackpackCapacity(int32 NewBackpackCapacity)
+{
+	BackpackCapacity = NewBackpackCapacity;
+	return NewBackpackCapacity;
+}
+
+void URTSMaterialsBackpack::SubRTSMaterialsToTarget(URTSMaterialsBackpack* NewRTSBackpack)
+{
+	NewRTSBackpack->StoreRTSMaterials(StoringRTSMaterials);
+	StoringRTSMaterials = FRTSMaterials(0);
+}
 
 // Called when the game starts
 void URTSMaterialsBackpack::BeginPlay()
