@@ -12,3 +12,18 @@ ERTSActorStates IRTSActorInterface::GetActorStates()
 {
 	return ERTSActorStates::Idle;
 }
+
+ERTSActorType IRTSActorInterface::GetActorType() const
+{
+	return ERTSActorType::Worker;
+}
+
+UCommandController* IRTSActorInterface::GetCommandController() const
+{
+	return nullptr;
+}
+
+ARTSAIController* IRTSActorInterface::GetRTSAIController() const
+{
+	return nullptr;
+}

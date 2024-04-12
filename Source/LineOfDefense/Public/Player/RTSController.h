@@ -14,17 +14,6 @@ class UInputMappingContext;
 class UInputAction;
 class IRTSActorInterface;
 struct FInputActionValue;
-USTRUCT(BlueprintType)
-struct FRightButtonClickResult
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-	FVector HitLocation;
-	UPROPERTY(BlueprintReadOnly,EditAnywhere)
-	AActor* HitActor = nullptr;
-};
-
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSController : public APlayerController
@@ -35,8 +24,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
-	void SendSkillUserAndTarget(const TArray<TScriptInterface<IRTSActorInterface>>& Targets ,FRightButtonClickResult RightButtonClickResult);
 private:
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputMappingContext> RTSContext;

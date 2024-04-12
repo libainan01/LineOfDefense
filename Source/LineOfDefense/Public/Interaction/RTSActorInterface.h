@@ -6,6 +6,10 @@
 #include "UObject/Interface.h"
 #include "RTSActorInterface.generated.h"
 
+class IRTSActorInterface;
+class UCommandController;
+class ARTSAIController;
+
 UENUM(BlueprintType)
 enum class ERTSActorType:uint8
 {
@@ -23,6 +27,20 @@ enum class ERTSActorStates:uint8
 	Gathering
 };
 
+USTRUCT(BlueprintType)
+struct FCommandInfo
+{
+	GENERATED_BODY()
+	FCommandInfo()
+	{
+		Target = nullptr;
+		Location = FVector::ZeroVector;
+	}
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	TScriptInterface<IRTSActorInterface> Target;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	FVector Location;
+};
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class URTSActorInterface : public UInterface
@@ -44,4 +62,8 @@ public:
 	virtual void UnHightLightActor() = 0;
 	virtual void SetActorState(ERTSActorStates NewActorStates);
 	virtual ERTSActorStates GetActorStates();
+	virtual ERTSActorType GetActorType() const;    
+	virtual UCommandController* GetCommandController()const;
+	virtual ARTSAIController* GetRTSAIController() const;
+	
 };

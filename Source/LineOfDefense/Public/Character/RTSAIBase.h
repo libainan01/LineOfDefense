@@ -26,6 +26,10 @@ public:
 	virtual void SetActorState(ERTSActorStates NewActorStates) override;
 	UFUNCTION(BlueprintCallable)
 	virtual ERTSActorStates GetActorStates() override{return ActorStates;};
+	UFUNCTION(BlueprintCallable)
+	virtual UCommandController* GetCommandController() const override{return CommandController;};
+
+	virtual ARTSAIController* GetRTSAIController() const override;
 	/** end IRTSActorInterface */
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -45,4 +49,8 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	FRTSMaterials ActorValue;//这个单位值多少钱
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	TObjectPtr<UCommandController> CommandController;
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AI")
+	ARTSAIController* AIController;
 };

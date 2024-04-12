@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "ActorComponent/CommandController.h"
 #include "Interaction/RTSActorInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -92,12 +93,17 @@ void ARTSController::RightButtonClick(const FInputActionValue& InputActionValue)
 		return;
 	}
 	FHitResult CurseHitResult;
-	FRightButtonClickResult RightButtonClickResult;
+	FCommandInfo RightButtonClickResult;
 	GetHitResultUnderCursor(ECC_Visibility,false,CurseHitResult);
+	RightButtonClickResult.Location = CurseHitResult.Location;
 	if (CurseHitResult.GetActor() != nullptr)
 	{
-		RightButtonClickResult.HitActor = CurseHitResult.GetActor();
-		SendSkillUserAndTarget(ThisActors,RightButtonClickResult);
+		RightButtonClickResult.Target = CurseHitResult.GetActor();
+		for(auto Actor : ThisActors)
+		{
+			Actor->GetCommandController()->SetCommandInfo(RightButtonClickResult);
+		}
 	}
+	
 }
 
