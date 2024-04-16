@@ -63,6 +63,26 @@ TArray<FRTSActorInfo> ARTSPlayerState::GetActor(ERTSActorType ActorType)
 	}
 }
 
+/*void ARTSPlayerState::DeleteActor(FRTSActorInfo TargetActor, ERTSActorType ActorType)
+{
+	switch (ActorType)
+	{
+	case ERTSActorType::Worker:
+		WorkerArray.Remove(TargetActor);
+		break;
+	case ERTSActorType::Barracks:
+		BarracksArray.Remove(TargetActor);
+		break;
+	case ERTSActorType::WareHouse:
+		WareHouseArray.Remove(TargetActor);
+		break;
+	case ERTSActorType::Material:
+		MaterialArray.Remove(TargetActor);
+		break;
+	default:;
+	}
+}*/
+
 void ARTSPlayerState::UpdateRTSMaterialInAttributes()const
 {
 	TObjectPtr<URTSAttributeSet> AS = Cast<URTSAttributeSet>(RTSAttributes);

@@ -27,3 +27,8 @@ ARTSAIController* IRTSActorInterface::GetRTSAIController() const
 {
 	return nullptr;
 }
+
+UBuildingTool* IRTSActorInterface::GetBuildingTool() const
+{
+	return nullptr;
+}

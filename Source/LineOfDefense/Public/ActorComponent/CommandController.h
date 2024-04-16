@@ -26,14 +26,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION(BlueprintCallable)
-    void SetCommandInfo (FCommandInfo CommandInfo);
+    void SetCommandInfo (FCommandInfo CommandInfo,bool bPresets);
 	UFUNCTION(BlueprintCallable)
 	void FinishCommand(bool Successed);
 protected:
 	TArray<FCommandInfo> CommandQueue;
+
+	void NormalCommand();
+	void ConstructionCommand();
 	UPROPERTY()
 	TObjectPtr<ARTSAIBase> Owner;
 	UPROPERTY()
-	bool bIdInMission = false;
+	bool bHasPresets = false;
 	void ExecuteCommand();
 };

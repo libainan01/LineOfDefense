@@ -17,6 +17,7 @@ class LINEOFDEFENSE_API ARTSAIBase : public ARTSCharacterBase ,public IRTSActorI
 public:
 	// Sets default values for this character's properties
 	ARTSAIBase();
+	//virtual ~ARTSAIBase() override;
 
 	/** IRTSActorInterface */
 	virtual void HightLightActor() override;
@@ -28,6 +29,8 @@ public:
 	virtual ERTSActorStates GetActorStates() override{return ActorStates;};
 	UFUNCTION(BlueprintCallable)
 	virtual UCommandController* GetCommandController() const override{return CommandController;};
+	UFUNCTION(BlueprintCallable)
+	virtual UBuildingTool* GetBuildingTool() const override;
 
 	virtual ARTSAIController* GetRTSAIController() const override;
 	/** end IRTSActorInterface */
@@ -37,6 +40,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FRTSMaterials GetActorValue () const {return ActorValue;}
+	UFUNCTION(BlueprintCallable)
+	FRTSMaterials SetActorValue(FRTSMaterials NewMaterials);
 
 protected:
 	// Called when the game starts or when spawned
@@ -53,4 +58,6 @@ protected:
 	TObjectPtr<UCommandController> CommandController;
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AI")
 	ARTSAIController* AIController;
+	UPROPERTY(BlueprintReadOnly,Category="Building")
+	UBuildingTool* BuildingTool;
 };

@@ -10,8 +10,8 @@
 /**
  * 
  */
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMonitorActorStates,ERTSActorStates,NewActorType);
+class ARTSAIBase;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMonitorActorStates,FCommandInfo,NewActorType);
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSAIController : public AAIController
@@ -24,4 +24,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void OnPossess(APawn* InPawn) override;
+	UPROPERTY(BlueprintReadOnly)
+	ARTSAIBase* AIBase;
 };

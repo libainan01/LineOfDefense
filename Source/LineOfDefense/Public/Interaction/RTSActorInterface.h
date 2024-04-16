@@ -4,11 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Interaction/RTSMaterialActorInterface.h"
 #include "RTSActorInterface.generated.h"
 
 class IRTSActorInterface;
 class UCommandController;
 class ARTSAIController;
+class UBuildingTool;
+class ARTSAIBase;
+class AConstructionSide;
 
 UENUM(BlueprintType)
 enum class ERTSActorType:uint8
@@ -16,7 +20,31 @@ enum class ERTSActorType:uint8
 	Worker,
 	WareHouse,
 	Barracks,
-	Material
+	Material,
+	ConstructionSite
+};
+
+USTRUCT(BlueprintType)
+struct FConstructionInfo
+{
+	GENERATED_BODY()
+	FConstructionInfo()
+	{
+		ConstructionTime = 0;
+		BlueprintClass = nullptr;
+	}
+	FConstructionInfo(int32 NewConstructionTime,FRTSMaterials NewMaterials,TSubclassOf<ARTSAIBase> NewBlueprintClass)
+	{
+		ConstructionTime = NewConstructionTime;
+		ActorValue = NewMaterials;
+		BlueprintClass = NewBlueprintClass;
+	}
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	int32 ConstructionTime;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	FRTSMaterials ActorValue;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	TSubclassOf<ARTSAIBase> BlueprintClass;
 };
 
 UENUM(BlueprintType)
@@ -24,7 +52,8 @@ enum class ERTSActorStates:uint8
 {
 	Idle,
 	Moving,
-	Gathering
+	Gathering,
+	Building
 };
 
 USTRUCT(BlueprintType)
@@ -35,11 +64,24 @@ struct FCommandInfo
 	{
 		Target = nullptr;
 		Location = FVector::ZeroVector;
+		bIsConstruction = false;
+		ConstructionSide = nullptr;
 	}
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	TScriptInterface<IRTSActorInterface> Target;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	FVector Location;
+    UPROPERTY()
+	bool bIsConstruction;
+	void SetConstructionSide(AConstructionSide* NewConstructionSide)
+	{
+		ConstructionSide = NewConstructionSide;
+		bIsConstruction = true;
+	};
+
+	AConstructionSide* GetConstructionSide() const {return ConstructionSide;}
+protected:
+	AConstructionSide* ConstructionSide;
 };
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -62,8 +104,9 @@ public:
 	virtual void UnHightLightActor() = 0;
 	virtual void SetActorState(ERTSActorStates NewActorStates);
 	virtual ERTSActorStates GetActorStates();
-	virtual ERTSActorType GetActorType() const;    
+	virtual ERTSActorType GetActorType() const;
 	virtual UCommandController* GetCommandController()const;
 	virtual ARTSAIController* GetRTSAIController() const;
+	virtual UBuildingTool* GetBuildingTool() const;
 	
 };

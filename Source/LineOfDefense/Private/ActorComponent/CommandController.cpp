@@ -3,6 +3,7 @@
 
 #include "ActorComponent/CommandController.h"
 
+#include "Actor/ConstructionSide.h"
 #include "Character/RTSAIBase.h"
 #include "Player/AI/RTSAIController.h"
 
@@ -35,10 +36,26 @@ void UCommandController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	// ...
 }
 
-void UCommandController::SetCommandInfo(FCommandInfo CommandInfo)
+void UCommandController::SetCommandInfo(FCommandInfo CommandInfo,bool bPresets)
 {
-	CommandQueue.Add(CommandInfo);
-	ExecuteCommand();
+	//这是一条预设命令则直接加入命令队列
+	if (bPresets)
+	{
+	    CommandQueue.Add(CommandInfo);
+	}
+	//这不是一条预设命令，则清空命令队列，在将当前命令加入到命令队列
+	else
+	{
+		CommandQueue.Empty();
+		CommandQueue.Add(CommandInfo);
+	}
+    //如果当前没有预设命令，则直接执行当前命令
+	if (!bHasPresets)
+	{
+	    ExecuteCommand();
+	}
+	//如过有预设明林，则在这里设置标签，防止下个预设命令直接执行
+	bHasPresets = bPresets;
 }
 
 void UCommandController::FinishCommand(bool Successed)
@@ -53,34 +70,50 @@ void UCommandController::FinishCommand(bool Successed)
 	}
 }
 
-void UCommandController::ExecuteCommand()
+void UCommandController::NormalCommand()
 {
-	if (bIdInMission)
-	{
-		return;
-	}
-	bIdInMission = true;
+	bool bActorStateIsSet = false;
 	if (CommandQueue[0].Target !=nullptr)
 	{
 		const ERTSActorType ActorType = CommandQueue[0].Target->GetActorType();
 
-		 switch (Cast<IRTSActorInterface>(GetOwner())->GetActorType())
-		 {
-		 case ERTSActorType::Worker:
-		 	{
-			    switch (ActorType)
-			    {
-			    case ERTSActorType::Material:
-				    {
-					    Owner->SetActorState(ERTSActorStates::Gathering);
-			    		break;
-				    }
-			    	default:;
-			    }
-		 	}
-		 	default:;
-		 }
+		switch (Cast<IRTSActorInterface>(GetOwner())->GetActorType())
+		{
+		case ERTSActorType::Worker:
+			{
+				switch (ActorType)
+				{
+				case ERTSActorType::Material:
+					{
+						Owner->SetActorState(ERTSActorStates::Gathering);
+						bActorStateIsSet = true;
+						break;
+					}
+				default:;
+				}
+			}
+		default:;
+		}
 	}
-	Owner->GetRTSAIController()->MonitorActorStates.Broadcast(Owner->GetActorStates());
+	if(!bActorStateIsSet) Owner->SetActorState(ERTSActorStates::Moving);
+	Owner->GetRTSAIController()->MonitorActorStates.Broadcast(CommandQueue[0]);
+}
+
+void UCommandController::ConstructionCommand()
+{
+	//Owner->SetActorState(ERTSActorStates::Building);
+	//Owner->GetRTSAIController()->MonitorActorStates.Broadcast(CommandQueue[0]);
+}
+
+void UCommandController::ExecuteCommand()
+{
+    if(CommandQueue[0].bIsConstruction)
+    {
+	    ConstructionCommand();
+    }
+    else
+    {
+	    NormalCommand();
+    }
 }
 

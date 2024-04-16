@@ -3,11 +3,13 @@
 
 #include "Character/Worker.h"
 
+#include "ActorComponent/BuildingTool.h"
 #include "ActorComponent/RTSMaterialsBackpack.h"
 
 AWorker::AWorker()
 {
 	RTSMaterialsBackpack = CreateDefaultSubobject<URTSMaterialsBackpack>(TEXT("Backpack"));
+	BuildingTool = CreateDefaultSubobject<UBuildingTool>(TEXT("BuildingTool"));
 }
 
 FRTSMaterials AWorker::GatherRTSMaterials(TScriptInterface<IRTSMaterialActorInterface> RTSMaterialActor)

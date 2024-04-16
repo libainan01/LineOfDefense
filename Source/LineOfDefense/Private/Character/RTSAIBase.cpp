@@ -19,6 +19,12 @@ ARTSAIBase::ARTSAIBase()
 	CommandController = CreateDefaultSubobject<UCommandController>("CommandController");
 }
 
+/*ARTSAIBase::~ARTSAIBase()
+{
+	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+	Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->DeleteActor(RTSActorInfo,Actortype);
+}*/
+
 void ARTSAIBase::HightLightActor()
 {
 	bHightlighted = true;
@@ -34,9 +40,24 @@ void ARTSAIBase::SetActorState(ERTSActorStates NewActorStates)
 	ActorStates = NewActorStates;
 }
 
+UBuildingTool* ARTSAIBase::GetBuildingTool() const
+{
+    if (BuildingTool!= nullptr)
+    {
+	    return BuildingTool;
+    }
+	return nullptr;
+}
+
 ARTSAIController* ARTSAIBase::GetRTSAIController() const
 {
 	return AIController;
+}
+
+FRTSMaterials ARTSAIBase::SetActorValue(FRTSMaterials NewMaterials)
+{
+	ActorValue = NewMaterials;
+	return ActorValue;
 }
 
 // Called when the game starts or when spawned

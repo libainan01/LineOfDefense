@@ -24,8 +24,11 @@ public:
 	ERTSActorType ActorType;
 
 	/** IRTSActorInterface */
+	UFUNCTION()
 	virtual void HightLightActor() override;
+	UFUNCTION()
 	virtual void UnHightLightActor() override;
+	UFUNCTION()
 	virtual ERTSActorType GetActorType() const override{return ActorType;};
 	/** end IRTSActorInterface */
 	
