@@ -16,6 +16,17 @@ ARTSEffectActor::ARTSEffectActor()
 	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
 
+void ARTSEffectActor::Destroyed()
+{
+	Super::Destroyed();
+	ARTSPlayerState* PS = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
+	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+	if (IsValid(PS))
+	{
+		PS->DeleteActor(RTSActorInfo,ActorType);
+	}
+}
+
 void ARTSEffectActor::HightLightActor()
 {
 }

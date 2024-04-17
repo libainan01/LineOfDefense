@@ -4,6 +4,7 @@
 #include "Actor/ConstructionSide.h"
 
 #include "ActorComponent/RTSMaterialsBackpack.h"
+#include "Character/RTSAIBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RTSPlayerState.h"
 
@@ -17,10 +18,14 @@ float AConstructionSide::Building(int32 ConstructionEfficiency)
 		return Progress;
 	}
 	Progress = ConstructionProgress/ConstructionInfo.ConstructionTime;
+	if (Progress>=1)
+	{
+		FinishBuilding();
+	}
 	return Progress;
 }
 
-void AConstructionSide::SetConstrucitonInfo(FConstructionInfo NewConstructionInfo)
+void AConstructionSide::SetConstructionInfo(FConstructionInfo NewConstructionInfo)
 {
 	ConstructionInfo = NewConstructionInfo;
 }
@@ -37,8 +42,16 @@ void AConstructionSide::BeginPlay()
 	PlayerState = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
 }
 
-void AConstructionSide::ConsumableMaterials(FRTSMaterials ConsumableMaterials)
+void AConstructionSide::ConsumableMaterials(FRTSMaterials ConsumableMaterials) const
 {
 	check(PlayerState)
 	PlayerState->GetRTSMaterialsBackpack()->ConsumableRTSMaterials(ConsumableMaterials);
+}
+
+void AConstructionSide::FinishBuilding()
+{
+	FActorSpawnParameters ActorSpawnParameters;
+	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<ARTSAIBase>(ConstructionInfo.BlueprintClass,GetActorLocation(),GetActorRotation(),ActorSpawnParameters);
+	this->Destroy();
 }

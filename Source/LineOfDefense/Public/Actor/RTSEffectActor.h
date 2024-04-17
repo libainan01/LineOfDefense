@@ -22,6 +22,7 @@ public:
 	ARTSEffectActor();
     UPROPERTY(EditAnywhere)
 	ERTSActorType ActorType;
+	virtual void Destroyed() override;
 
 	/** IRTSActorInterface */
 	UFUNCTION()

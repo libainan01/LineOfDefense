@@ -6,8 +6,9 @@
 #include "Interaction/RTSActorInterface.h"
 #include "Interaction/RTSMaterialActorInterface.h"
 #include "RTSCharacterBase.h"
-#include "AbilitySystem/RTSAttributeSet.h"
 #include "RTSAIBase.generated.h"
+
+class ARTSPlayerState;
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSAIBase : public ARTSCharacterBase ,public IRTSActorInterface 
@@ -17,7 +18,8 @@ class LINEOFDEFENSE_API ARTSAIBase : public ARTSCharacterBase ,public IRTSActorI
 public:
 	// Sets default values for this character's properties
 	ARTSAIBase();
-	virtual ~ARTSAIBase() override;
+	
+	virtual void Destroyed() override;
 
 	/** IRTSActorInterface */
 	virtual void HightLightActor() override;
@@ -60,4 +62,6 @@ protected:
 	ARTSAIController* AIController;
 	UPROPERTY(BlueprintReadOnly,Category="Building")
 	UBuildingTool* BuildingTool;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<ARTSPlayerState> RTSPlayerState;
 };

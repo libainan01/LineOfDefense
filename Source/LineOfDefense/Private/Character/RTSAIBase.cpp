@@ -19,10 +19,18 @@ ARTSAIBase::ARTSAIBase()
 	CommandController = CreateDefaultSubobject<UCommandController>("CommandController");
 }
 
-ARTSAIBase::~ARTSAIBase()
+void ARTSAIBase::Destroyed()
 {
+	Super::BeginDestroy();
 	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
-	Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->DeleteActor(RTSActorInfo,Actortype);
+	if (IsValid(RTSPlayerState))
+	{
+		RTSPlayerState->DeleteActor(RTSActorInfo,Actortype);
+	}
+	else
+	{
+		UE_LOG(LogTemp,Log,TEXT("---"))
+	}
 }
 
 void ARTSAIBase::HightLightActor()
@@ -65,9 +73,11 @@ void ARTSAIBase::BeginPlay()
 {
 	Super::BeginPlay();
 	RTSAbilitySystemComponent->InitAbilityActorInfo(this,this);
-	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
 	AIController = GetController<ARTSAIController>();
-    Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->SaveActor(RTSActorInfo,Actortype);
+    RTSPlayerState = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
+
+	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+	RTSPlayerState->SaveActor(RTSActorInfo,Actortype);
 }
 
 

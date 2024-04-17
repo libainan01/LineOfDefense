@@ -101,8 +101,8 @@ void UCommandController::NormalCommand()
 
 void UCommandController::ConstructionCommand()
 {
-	//Owner->SetActorState(ERTSActorStates::Building);
-	//Owner->GetRTSAIController()->MonitorActorStates.Broadcast(CommandQueue[0]);
+	Owner->SetActorState(ERTSActorStates::Building);
+	Owner->GetRTSAIController()->MonitorActorStates.Broadcast(CommandQueue[0]);
 }
 
 void UCommandController::ExecuteCommand()

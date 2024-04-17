@@ -81,6 +81,7 @@ struct FCommandInfo
 
 	AConstructionSide* GetConstructionSide() const {return ConstructionSide;}
 protected:
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	AConstructionSide* ConstructionSide;
 };
 // This class does not need to be modified.

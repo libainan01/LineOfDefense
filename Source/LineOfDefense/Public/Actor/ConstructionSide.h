@@ -18,16 +18,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float Building(int32 ConstructionEfficiency);
 	UFUNCTION(BlueprintCallable)
-	void SetConstrucitonInfo(FConstructionInfo NewConstructionInfo);
+	void SetConstructionInfo(FConstructionInfo NewConstructionInfo);
 	UFUNCTION(BlueprintCallable)
-	void InitialConstructionSide (FConstructionInfo NewonstructionInfo , ARTSPlayerState* PS);
+	void InitialConstructionSide (FConstructionInfo NewConstructioninfo , ARTSPlayerState* PS);
 protected:
 	int32 ConstructionProgress;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	FConstructionInfo ConstructionInfo;
 	UFUNCTION()
 	virtual void BeginPlay() override;
 	UFUNCTION()
-	void ConsumableMaterials (FRTSMaterials ConsumableMaterials);
+	void ConsumableMaterials (FRTSMaterials ConsumableMaterials) const;
 	UPROPERTY()
 	TObjectPtr<ARTSPlayerState> PlayerState;
+	UFUNCTION()
+	void FinishBuilding();
 };

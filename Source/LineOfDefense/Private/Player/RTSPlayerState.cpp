@@ -68,16 +68,16 @@ void ARTSPlayerState::DeleteActor(FRTSActorInfo TargetActor, ERTSActorType Actor
 	switch (ActorType)
 	{
 	case ERTSActorType::Worker:
-		WorkerArray.RemoveSingle(TargetActor);
+		if(!WorkerArray.IsEmpty())WorkerArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::Barracks:
-		BarracksArray.RemoveSingle(TargetActor);
+		if(!BarracksArray.IsEmpty())BarracksArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::WareHouse:
-		WareHouseArray.RemoveSingle(TargetActor);
+		if(!WareHouseArray.IsEmpty())WareHouseArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::Material:
-		MaterialArray.RemoveSingle(TargetActor);
+		if(!MaterialArray.IsEmpty())MaterialArray.RemoveSingle(TargetActor);
 		break;
 	default:;
 	}
