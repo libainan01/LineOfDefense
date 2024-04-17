@@ -32,6 +32,11 @@ struct FRTSActorInfo
 	FVector RTSActorLocation;
 	UPROPERTY(BlueprintReadOnly,EditAnywhere)
 	TScriptInterface<IRTSActorInterface> RTSActorInterface;
+
+	bool operator==(const FRTSActorInfo& NewRTSActorInfo) const
+	{
+		return RTSActorInterface == NewRTSActorInfo.RTSActorInterface;
+	}
 };
 
 UCLASS()
@@ -47,8 +52,8 @@ public:
     void SaveActor(FRTSActorInfo TargetActor , ERTSActorType ActorType);
 	UFUNCTION(BlueprintCallable)
 	TArray<FRTSActorInfo> GetActor(ERTSActorType ActorType);
-	//UFUNCTION(BlueprintCallable)
-	//void DeleteActor(FRTSActorInfo TargetActor, ERTSActorType ActorType);
+	UFUNCTION(BlueprintCallable)
+	void DeleteActor(FRTSActorInfo TargetActor, ERTSActorType ActorType);
 	UFUNCTION(BlueprintCallable,Category="RTS|Backpack")
 	virtual URTSMaterialsBackpack* GetRTSMaterialsBackpack() const override{return Backpack;}
 

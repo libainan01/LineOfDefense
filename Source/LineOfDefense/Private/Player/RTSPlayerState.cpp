@@ -63,25 +63,25 @@ TArray<FRTSActorInfo> ARTSPlayerState::GetActor(ERTSActorType ActorType)
 	}
 }
 
-/*void ARTSPlayerState::DeleteActor(FRTSActorInfo TargetActor, ERTSActorType ActorType)
+void ARTSPlayerState::DeleteActor(FRTSActorInfo TargetActor, ERTSActorType ActorType)
 {
 	switch (ActorType)
 	{
 	case ERTSActorType::Worker:
-		WorkerArray.Remove(TargetActor);
+		WorkerArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::Barracks:
-		BarracksArray.Remove(TargetActor);
+		BarracksArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::WareHouse:
-		WareHouseArray.Remove(TargetActor);
+		WareHouseArray.RemoveSingle(TargetActor);
 		break;
 	case ERTSActorType::Material:
-		MaterialArray.Remove(TargetActor);
+		MaterialArray.RemoveSingle(TargetActor);
 		break;
 	default:;
 	}
-}*/
+}
 
 void ARTSPlayerState::UpdateRTSMaterialInAttributes()const
 {

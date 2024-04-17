@@ -17,7 +17,7 @@ class LINEOFDEFENSE_API ARTSAIBase : public ARTSCharacterBase ,public IRTSActorI
 public:
 	// Sets default values for this character's properties
 	ARTSAIBase();
-	//virtual ~ARTSAIBase() override;
+	virtual ~ARTSAIBase() override;
 
 	/** IRTSActorInterface */
 	virtual void HightLightActor() override;

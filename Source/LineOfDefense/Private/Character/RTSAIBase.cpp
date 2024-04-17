@@ -19,11 +19,11 @@ ARTSAIBase::ARTSAIBase()
 	CommandController = CreateDefaultSubobject<UCommandController>("CommandController");
 }
 
-/*ARTSAIBase::~ARTSAIBase()
+ARTSAIBase::~ARTSAIBase()
 {
 	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
 	Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0))->DeleteActor(RTSActorInfo,Actortype);
-}*/
+}
 
 void ARTSAIBase::HightLightActor()
 {
