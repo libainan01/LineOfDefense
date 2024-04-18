@@ -3,6 +3,8 @@
 
 #include "UI/Widgets/RTSUserWidget.h"
 
+#include "UI/WidgetController/OverlayWidgetController.h"
+
 void URTSUserWidget::SetWidgetController(UObject* InWidgetController)
 {
 	WidgetController = InWidgetController;

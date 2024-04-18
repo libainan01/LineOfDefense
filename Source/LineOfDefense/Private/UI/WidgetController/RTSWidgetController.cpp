@@ -3,12 +3,15 @@
 
 #include "UI/WidgetController/RTSWidgetController.h"
 
+
 void URTSWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
 	PlayerController = WCParams.PlayerController;
 	PlayerState = WCParams.PlayerState;
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.Attributes;
+
+	WidgetControllerHasInitial();
 }
 
 void URTSWidgetController::BroadcastInitialValues()
@@ -18,4 +21,9 @@ void URTSWidgetController::BroadcastInitialValues()
 
 void URTSWidgetController::BindCallbacksToDependencies()
 {
+}
+
+void URTSWidgetController::WidgetControllerHasInitial()
+{
+	
 }

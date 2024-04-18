@@ -46,16 +46,41 @@ struct FRTSMaterials
 	
 	int32 GetTotal() const {return Total;}
 
-	FRTSMaterials operator - (const FRTSMaterials NewMaterials)
+	FRTSMaterials operator - (const FRTSMaterials& NewMaterials) const
 	{
-		FRTSMaterials Materials(Gold-NewMaterials.Gold,Wood-NewMaterials.Wood);
+		const FRTSMaterials Materials(Gold-NewMaterials.Gold,Wood-NewMaterials.Wood);
 		return Materials;
 	}
-	FRTSMaterials operator + (const FRTSMaterials NewMaterials)
+	FRTSMaterials operator + (const FRTSMaterials& NewMaterials) const
 	{
-		FRTSMaterials Materials(Gold+NewMaterials.Gold,Wood+NewMaterials.Wood);
+		const FRTSMaterials Materials(Gold+NewMaterials.Gold,Wood+NewMaterials.Wood);
 		return Materials;
 	}
+
+	bool operator > (const FRTSMaterials& NewMaterials) const
+	{
+		return Gold > NewMaterials.Gold && Wood > NewMaterials.Wood;
+	}
+
+	bool operator < (const FRTSMaterials& NewMaterials) const
+	{
+		return Gold < NewMaterials.Gold && Wood < NewMaterials.Wood;
+	}
+
+	bool operator==(const FRTSMaterials& NewMaterials) const
+	{
+		return Gold == NewMaterials.Gold && Wood == NewMaterials.Wood;
+	}
+
+	bool operator <=(const FRTSMaterials& NewMaterials) const
+	{
+		return Gold <= NewMaterials.Gold && Wood <= NewMaterials.Wood;
+	}
+	
+	bool operator >=(const FRTSMaterials& NewMaterials) const
+    {
+		return Gold >= NewMaterials.Gold && Wood >= NewMaterials.Wood;
+    }
 protected:
 	
 	UPROPERTY(BlueprintReadOnly)

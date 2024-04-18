@@ -47,10 +47,11 @@ void UCommandController::SetCommandInfo(FCommandInfo CommandInfo,bool bPresets)
 	else
 	{
 		CommandQueue.Empty();
-		CommandQueue.Add(CommandInfo);
+		bHasPresets = bPresets;
 	}
+		CommandQueue.Add(CommandInfo);
     //如果当前没有预设命令，则直接执行当前命令
-	if (!bHasPresets)
+	if (!bHasPresets&&!bPresets)
 	{
 	    ExecuteCommand();
 	}
@@ -91,8 +92,9 @@ void UCommandController::NormalCommand()
 					}
 				default:;
 				}
+				break;
 			}
-		default:;
+		default:return;
 		}
 	}
 	if(!bActorStateIsSet) Owner->SetActorState(ERTSActorStates::Moving);

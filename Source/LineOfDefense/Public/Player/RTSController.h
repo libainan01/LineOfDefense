@@ -18,6 +18,7 @@ struct FInputActionValue;
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FConstructionApplicationRequest,FConstructionInfo,ConstructionInfo);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FConstructionApplicationSignature,bool,bAllow);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FUpdateSelectActorRequest,const TArray<TScriptInterface<IRTSActorInterface>>&,NewActors);
 
 UCLASS()
 class LINEOFDEFENSE_API ARTSController : public APlayerController
@@ -31,6 +32,8 @@ public:
 	FConstructionApplicationRequest ConstructionApplicationRequest;
 	UPROPERTY()
 	FConstructionApplicationSignature ConstructionApplicationSignature;
+	UPROPERTY()
+	FUpdateSelectActorRequest SelectActorRequest;
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -38,7 +41,7 @@ protected:
 	bool bIsPreset = false;
 
 	/** ToolFunc **/
-    FHitResult GetCursorHitResult ();
+    FHitResult GetCursorHitResult (ECollisionChannel CollisionChannel);
    ///** ToolFuncEnd**/
 
     /** Construction**/
@@ -54,24 +57,34 @@ protected:
     TObjectPtr<AConstructionSide> ConstructionSide;
     UPROPERTY(EditAnywhere,Category="Building")
     TSubclassOf<AConstructionSide> ConstructionSideClass;
-    /** ConstructionEnd **    
-    /** InputFunc **/
-    void (ARTSController::*LeftButtonStarted)();
-    void (ARTSController::*LeftButtonTriggered)();
-    void (ARTSController::*LeftButtonEnd)();
-    void (ARTSController::*RightButtonStarted)();
-    /** InputFuncEnd **/
+    /** ConstructionEnd **/    
+
 
 	
 private:
+	/** InputFunc **/
+	void (ARTSController::*LeftButtonStarted)();
+	void (ARTSController::*LeftButtonTriggered)();
+	void (ARTSController::*LeftButtonEnd)();
+	void (ARTSController::*RightButtonStarted)();
+	void (ARTSController::*LeftShiftStarted)();
+	void (ARTSController::*LeftShiftEnd)();
+	/** InputFuncEnd **/
+
+	/** InputActionAndContext **/
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputMappingContext> RTSContext;
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputAction> MouseLeftButtonAction;
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputAction> MouseRightButtonAction;
-
+	UPROPERTY(EditAnywhere,Category="Input")
+	TObjectPtr<UInputAction> LeftShiftClick;
+	/** InputActionAndContextEnd **/
+	
 	FVector StartTracepoint;
+
+	/** InputActionFunc **/
 	UFUNCTION()
 	void OnLeftButtonStarted (const FInputActionValue& InputActionValue);
 	UFUNCTION()
@@ -82,13 +95,24 @@ private:
 	void RightButtonClick(const FInputActionValue& InputActionValue);
 	UFUNCTION()
 	void RightButtonRelease(const FInputActionValue& InputActionValue);
+	UFUNCTION()
+	void OnLeftShiftStarted(const FInputActionValue& InputActionValue);
+	UFUNCTION()
+	void OnLeftShiftEnd(const FInputActionValue& InputActionValue);
+	/** InputActionFuncEnd **/
 
+	/** InputActionCustomFunc **/
 	UFUNCTION()
 	void BeginDrawTraceBox();
 	UFUNCTION()
 	void DrawTraceBox();
 	UFUNCTION()
 	void FinishDrawTraceBox();
+	UFUNCTION()
+	void SetPresetCommand();
+	UFUNCTION()
+	void CancelPresetCommand();
+	/** InputActionCustomFuncEnd **/
 	
 	TArray<TScriptInterface<IRTSActorInterface>> LastActors;
 	TArray<TScriptInterface<IRTSActorInterface>> ThisActors;

@@ -4,6 +4,9 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 #include "AbilitySystem/RTSAttributeSet.h"
+#include "ActorComponent/RTSMaterialsBackpack.h"
+#include "Player/RTSController.h"
+#include "Player/RTSPlayerState.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -42,4 +45,21 @@ void UOverlayWidgetController::WoodChanged(const FOnAttributeChangeData& Data) c
 void UOverlayWidgetController::GoldChanged(const FOnAttributeChangeData& Data) const
 {
 	OnGoldChanged.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::SelectActorChanged(const TArray<TScriptInterface<IRTSActorInterface>>& NewActors)
+{
+	OnSelectActorChanged.Broadcast(NewActors);
+}
+
+void UOverlayWidgetController::OnRTSMaterialsChanged(FRTSMaterials NewFRTSMaterials)
+{
+	RTSMaterialsUptate(NewFRTSMaterials);
+}
+
+void UOverlayWidgetController::WidgetControllerHasInitial()
+{
+	Super::WidgetControllerHasInitial();
+	Cast<ARTSController>(PlayerController)->SelectActorRequest.BindDynamic(this,&UOverlayWidgetController::SelectActorChanged);
+	Cast<ARTSPlayerState>(PlayerState)->GetRTSMaterialsBackpack()->OnRTSMaterialsChanging.AddDynamic(this,&UOverlayWidgetController::OnRTSMaterialsChanged);
 }

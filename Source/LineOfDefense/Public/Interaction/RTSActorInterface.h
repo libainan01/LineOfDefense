@@ -85,7 +85,7 @@ protected:
 	AConstructionSide* ConstructionSide;
 };
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI,Blueprintable)
 class URTSActorInterface : public UInterface
 {
 	GENERATED_BODY()

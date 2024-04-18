@@ -7,12 +7,21 @@
 #include "Actor/ConstructionSide.h"
 #include "ActorComponent/CommandController.h"
 #include "Interaction/RTSActorInterface.h"
+#include "Player/RTSPlayerState.h"
+
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ARTSController::ARTSController()
 {
 	bReplicates = true;//开启网络同步
+
+	//初始化输入回调函数
+	LeftButtonStarted = &ARTSController::BeginDrawTraceBox;
+	LeftButtonTriggered = &ARTSController::DrawTraceBox;
+	LeftButtonEnd = &ARTSController::FinishDrawTraceBox;
+	LeftShiftStarted = &ARTSController::SetPresetCommand;
+	LeftShiftEnd = &ARTSController::CancelPresetCommand;
 }
 
 void ARTSController::BeginPlay()
@@ -35,11 +44,7 @@ void ARTSController::BeginPlay()
 	SetInputMode(InputModeData);
 
 	ConstructionApplicationRequest.BindDynamic(this,&ARTSController::ReviewConstructionApplication);
-
-	//初始化输入回调函数
-	LeftButtonStarted = &ARTSController::BeginDrawTraceBox;
-	LeftButtonTriggered = &ARTSController::DrawTraceBox;
-	LeftButtonEnd = &ARTSController::FinishDrawTraceBox;
+	
 }
 
 void ARTSController::SetupInputComponent()
@@ -51,13 +56,15 @@ void ARTSController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Triggered,this,&ARTSController::OnLeftButtonTriggered);
 	EnhancedInputComponent->BindAction(MouseLeftButtonAction,ETriggerEvent::Completed,this,&ARTSController::OnLeftButtonEnd);
 	EnhancedInputComponent->BindAction(MouseRightButtonAction,ETriggerEvent::Started,this,&ARTSController::RightButtonClick);
+	EnhancedInputComponent->BindAction(LeftShiftClick,ETriggerEvent::Started,this,&ARTSController::OnLeftShiftStarted);
+	EnhancedInputComponent->BindAction(LeftShiftClick,ETriggerEvent::Completed,this,&ARTSController::CancelPresetCommand);
 	
 }
 
-FHitResult ARTSController::GetCursorHitResult()
+FHitResult ARTSController::GetCursorHitResult(ECollisionChannel CollisionChannel)
 {
 	FHitResult CurseHitResult;
-	GetHitResultUnderCursor(ECC_Visibility,false,CurseHitResult);
+	GetHitResultUnderCursor(CollisionChannel,false,CurseHitResult);
 	return CurseHitResult;
 }
 
@@ -69,15 +76,16 @@ void ARTSController::ReviewConstructionApplication(FConstructionInfo NewCosntruc
 	
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	FVector Location = GetCursorHitResult().Location;
+	FVector Location = GetCursorHitResult(ECC_GameTraceChannel2).Location;
 	ConstructionSide = GetWorld()->SpawnActor<AConstructionSide>(ConstructionSideClass,Location,FRotator::ZeroRotator,SpawnParameters);
-    
+    ConstructionSide->InitialConstructionSide(NewCosntructionInfo,GetPlayerState<ARTSPlayerState>());
+	
 	GetWorld()->GetTimerManager().SetTimer(ConstructionReviewTimerHandle,this,&ARTSController::CheckConstruction,0.2f,true);
 }
 
 void ARTSController::CheckConstruction()
 {
-	FVector Location = GetCursorHitResult().Location;
+	FVector Location = GetCursorHitResult(ECC_GameTraceChannel2).Location;
 	ConstructionSide->SetActorLocation(Location);
 }
 
@@ -126,7 +134,7 @@ void ARTSController::RightButtonClick(const FInputActionValue& InputActionValue)
 	
 	FHitResult CurseHitResult;
 	FCommandInfo RightButtonClickResult;
-	GetHitResultUnderCursor(ECC_Visibility,false,CurseHitResult);
+	CurseHitResult = GetCursorHitResult(ECC_Visibility);
 	RightButtonClickResult.Location = CurseHitResult.Location;
 	RightButtonClickResult.Target = CurseHitResult.GetActor();
 
@@ -138,47 +146,78 @@ void ARTSController::RightButtonRelease(const FInputActionValue& InputActionValu
 {
 	
 }
+void ARTSController::OnLeftShiftStarted(const FInputActionValue& InputActionValue)
+{
+	(this->*LeftShiftStarted)();
+}
+
+void ARTSController::OnLeftShiftEnd(const FInputActionValue& InputActionValue)
+{
+	(this->*LeftShiftEnd)();
+}
 
 void ARTSController::BeginDrawTraceBox()
 {
 	FHitResult CursorHitResult;
-	GetHitResultUnderCursor(ECC_Visibility,false,CursorHitResult);
+	CursorHitResult = GetCursorHitResult(ECC_GameTraceChannel2);
 	StartTracepoint = CursorHitResult.Location;	
 }
 
 void ARTSController::DrawTraceBox()
 {
 	FHitResult CursorHitResult;
-	GetHitResultUnderCursor(ECC_Visibility,false,CursorHitResult);
+	CursorHitResult = GetCursorHitResult(ECC_GameTraceChannel2);
 	FVector Diagonal = CursorHitResult.Location - StartTracepoint;
 
 	FVector StartPoint = FVector(StartTracepoint.X,StartTracepoint.Y+UKismetMathLibrary::SafeDivide(Diagonal.Y,2),0);
 	FVector EndPoint = FVector(CursorHitResult.Location.X,StartTracepoint.Y+UKismetMathLibrary::SafeDivide(Diagonal.Y,2),0);
 	FVector HalfSize = FVector(0,UKismetMathLibrary::SafeDivide(Diagonal.Y,2),500);
 	TArray<AActor*> IgnoreActors;
-	UKismetSystemLibrary::BoxTraceMulti(GetWorld(),StartPoint,EndPoint,HalfSize,FRotator(0,0,0),TraceTypeQuery3,false,IgnoreActors,EDrawDebugTrace::ForOneFrame,TraceBoxHitResults,true);
+	IgnoreActors.Add(this);
+	UKismetSystemLibrary::BoxTraceMulti(GetWorld(),StartPoint,EndPoint,HalfSize,FRotator(0,0,0),TraceTypeQuery4,false,IgnoreActors,EDrawDebugTrace::ForOneFrame,TraceBoxHitResults,true);
 }
 
 void ARTSController::FinishDrawTraceBox()
 {
-	if (TraceBoxHitResults.IsEmpty())
+	
+	if (!TraceBoxHitResults.IsEmpty())
 	{
-		return;
-	}
-	for (auto BoxHitResult : TraceBoxHitResults )
-	{
-		TScriptInterface<IRTSActorInterface> BoxHitActor = BoxHitResult.GetActor();
-		if(!BoxHitActor) continue;
-		BoxHitActor->HightLightActor();
+		for (auto BoxHitResult : TraceBoxHitResults )
+		{
+			TScriptInterface<IRTSActorInterface> BoxHitActor = BoxHitResult.GetActor();
+			if(!BoxHitActor) continue;
+			BoxHitActor->HightLightActor();
 
-		ThisActors.Add(BoxHitResult.GetActor());
+			ThisActors.AddUnique(BoxHitResult.GetActor());
+		}
+	}
+	else
+	{
+		ThisActors.Empty();
 	}
 
 	for (auto LastHitActor :LastActors)
 	{
 		if (!LastHitActor) continue;
-
 		LastHitActor->UnHightLightActor();
 	}
+	
+	LastActors = ThisActors;
+	
+	if (SelectActorRequest.IsBound())
+	{
+	    SelectActorRequest.Execute(ThisActors);
+	}
+	
+}
+
+void ARTSController::SetPresetCommand()
+{
+	bIsPreset = true;
+}
+
+void ARTSController::CancelPresetCommand()
+{
+	bIsPreset = false;
 }
 

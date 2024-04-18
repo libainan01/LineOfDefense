@@ -3,6 +3,7 @@
 
 #include "UI/Widgets/RTSConstructionButton.h"
 
+#include "ActorComponent/RTSMaterialsBackpack.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/RTSController.h"
@@ -17,4 +18,10 @@ void URTSConstructionButton::NativeConstruct()
 void URTSConstructionButton::RequestConstructionPermit()
 {
 	Cast<ARTSController>(UGameplayStatics::GetPlayerController(GetWorld(),0))->ConstructionApplicationRequest.Execute(ConstructionInfo);
+}
+
+bool URTSConstructionButton::CheckMaterialsIsEnough(const FRTSMaterials& NewMaterials) const
+{
+	ConstructionButton->SetIsEnabled(ConstructionInfo.ActorValue<=NewMaterials);
+	return ConstructionInfo.ActorValue<=NewMaterials;
 }

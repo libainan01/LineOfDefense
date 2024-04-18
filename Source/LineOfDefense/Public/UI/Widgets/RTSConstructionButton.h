@@ -24,5 +24,6 @@ protected:
 
 	UFUNCTION()
 	void RequestConstructionPermit();
-	
+	UFUNCTION(BlueprintCallable,Category="RTS|TYSMaterials")
+	bool CheckMaterialsIsEnough(const FRTSMaterials& NewMaterials) const;
 };
