@@ -34,12 +34,12 @@ void AConstructionSide::InitialConstructionSide(FConstructionInfo NewConstructio
 {
 	ConstructionInfo = NewConstructionInfo;
 	PlayerState = PS;
+	ConsumableMaterials(ConstructionInfo.ActorValue);
 }
 
 void AConstructionSide::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerState = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
 }
 
 void AConstructionSide::ConsumableMaterials(FRTSMaterials ConsumableMaterials) const
@@ -52,6 +52,6 @@ void AConstructionSide::FinishBuilding()
 {
 	FActorSpawnParameters ActorSpawnParameters;
 	ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	GetWorld()->SpawnActor<ARTSAIBase>(ConstructionInfo.BlueprintClass,GetActorLocation(),GetActorRotation(),ActorSpawnParameters);
+	GetWorld()->SpawnActor<ARTSAIBase>(ConstructionInfo.BlueprintClass,GetActorLocation()+FVector(0,0,50),GetActorRotation(),ActorSpawnParameters);
 	this->Destroy();
 }

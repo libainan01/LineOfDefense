@@ -104,9 +104,12 @@ void ARTSController::ApproveConstructionApplication()
 
 void ARTSController::MakeCommandInfo(FCommandInfo NewCommandInfo)
 {
-	for (auto Actor : ThisActors)
+	for (const auto Actor : ThisActors)
 	{
-		Actor->GetCommandController()->SetCommandInfo(NewCommandInfo,bIsPreset);
+		if(Actor->GetCommandController())
+		{
+			Actor->GetCommandController()->SetCommandInfo(NewCommandInfo,bIsPreset);
+		}
 	}
 }
 
@@ -171,7 +174,7 @@ void ARTSController::DrawTraceBox()
 
 	FVector StartPoint = FVector(StartTracepoint.X,StartTracepoint.Y+UKismetMathLibrary::SafeDivide(Diagonal.Y,2),0);
 	FVector EndPoint = FVector(CursorHitResult.Location.X,StartTracepoint.Y+UKismetMathLibrary::SafeDivide(Diagonal.Y,2),0);
-	FVector HalfSize = FVector(0,UKismetMathLibrary::SafeDivide(Diagonal.Y,2),500);
+	FVector HalfSize = FVector(0,UKismetMathLibrary::SafeDivide(Diagonal.Y,2),1000);
 	TArray<AActor*> IgnoreActors;
 	IgnoreActors.Add(this);
 	UKismetSystemLibrary::BoxTraceMulti(GetWorld(),StartPoint,EndPoint,HalfSize,FRotator(0,0,0),TraceTypeQuery4,false,IgnoreActors,EDrawDebugTrace::ForOneFrame,TraceBoxHitResults,true);

@@ -18,7 +18,6 @@ ARTSEffectActor::ARTSEffectActor()
 
 void ARTSEffectActor::Destroyed()
 {
-	Super::Destroyed();
 	ARTSPlayerState* PS = Cast<ARTSPlayerState>(UGameplayStatics::GetPlayerState(GetWorld(),0));
 	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
 	if (IsValid(PS))

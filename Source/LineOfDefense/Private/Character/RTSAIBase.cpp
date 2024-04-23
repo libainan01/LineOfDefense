@@ -21,15 +21,11 @@ ARTSAIBase::ARTSAIBase()
 
 void ARTSAIBase::Destroyed()
 {
-	Super::BeginDestroy();
-	FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
+	if (RTSPlayerState == nullptr) return;
 	if (IsValid(RTSPlayerState))
 	{
+	    FRTSActorInfo RTSActorInfo(GetActorLocation(),this);
 		RTSPlayerState->DeleteActor(RTSActorInfo,Actortype);
-	}
-	else
-	{
-		UE_LOG(LogTemp,Log,TEXT("---"))
 	}
 }
 
