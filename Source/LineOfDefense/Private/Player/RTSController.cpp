@@ -182,6 +182,7 @@ void ARTSController::DrawTraceBox()
 
 void ARTSController::FinishDrawTraceBox()
 {
+	ThisActors.Empty();
 	
 	if (!TraceBoxHitResults.IsEmpty())
 	{
@@ -194,10 +195,7 @@ void ARTSController::FinishDrawTraceBox()
 			ThisActors.AddUnique(BoxHitResult.GetActor());
 		}
 	}
-	else
-	{
-		ThisActors.Empty();
-	}
+
 
 	for (auto LastHitActor :LastActors)
 	{
